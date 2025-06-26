@@ -1,5 +1,19 @@
 .container {
     display: grid;
-    grid-template: 100px 100px;
-    
+    grid-template-rows: 100px 100px 100px;
+    grid-template-columns: 100px 100px 100px;
+}
+
+.item {
+    background-color: orange;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.last-column {
+    background-color: lightblue;
+}
+
+.first-row {
+    background-color: pink;
 }
