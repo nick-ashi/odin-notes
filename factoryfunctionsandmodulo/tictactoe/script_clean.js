@@ -18,12 +18,12 @@ function Gameboard() {
     function Cell() {
         let value = 0;
         // 
-        const addSymbol = (player) => {
+        const addToken = (player) => {
             value = player;
         };
         const getValue = () => value;
         return {
-            addSymbol, 
+            addToken, 
             getValue
         };
     }
@@ -38,25 +38,21 @@ function Gameboard() {
     // get whole board for ui
     const getBoard = () => board;
 
-    const placeSymbol = (row, col, player) => {
+    const dropToken = (col, player) => {
         
         // val col
         if (col < 0 || col >= cols) {
             console.log("Invalid column");
             return false;
         }
-
-        if (row < 0 || row >= rows) {
-            console.log("Invalid row");
-            return false;
-        }
         
-        if (board[row][col].getValue() === 0) {
-                board[row][col].addSymbol(player);
+        for (let row = rows - 1; row >= 0; row--) {
+            if (board[row][col].getValue() === 0) {
+                board[row][col].addToken(player);
                 return true;
+            }
         }
-
-        console.log("Position already taken");
+        console.log("Column is full");
         return false; 
     }
 
@@ -73,7 +69,7 @@ function Gameboard() {
         console.log("--- ----- ---\n");
     }
 
-    return {getBoard, placeSymbol, printBoard}
+    return {getBoard, dropToken, printBoard}
 }
 
 function GameController(gameBoard) {
@@ -87,16 +83,16 @@ function GameController(gameBoard) {
 
     const getCurrentPlayer = () => currentPlayer; // Add this method
 
-    const playTurn = (row, col) => {
+    const playTurn = (col) => {
         const previousPlayer = currentPlayer; // Store who's making the move
-        if (gameBoard.placeSymbol(row, col, currentPlayer)) {
+        if (gameBoard.dropToken(col, currentPlayer)) {
             currentPlayer = currentPlayer === 1 ? 2 : 1; // Switch after successful move
             return { success: true, player: previousPlayer }; // Return success and who played
         }
         return { success: false }; // Return failure
     }
 
-    return { players, playTurn, getCurrentPlayer }
+    return { playTurn, getCurrentPlayer }
 }
 
 function checkWin(board, player) {
@@ -153,37 +149,6 @@ function checkWin(board, player) {
 const gameBoard = Gameboard();
 const gameController = GameController(gameBoard);
 
-// Modal functions
-function showWinModal(message) {
-    const modal = document.getElementById('winModal');
-    const winMessage = document.getElementById('winMessage');
-    winMessage.textContent = message;
-    modal.style.display = 'block';
-}
-
-function hideWinModal() {
-    const modal = document.getElementById('winModal');
-    modal.style.display = 'none';
-}
-
-function resetGame() {
-    // Clear all cells
-    const gridCells = document.querySelectorAll('.grid-cell');
-    gridCells.forEach(cell => {
-        cell.textContent = '';
-    });
-    
-    // Reset game state (create new instances)
-    const newGameBoard = Gameboard();
-    const newGameController = GameController(newGameBoard);
-    
-    // Update global references
-    Object.assign(gameBoard, newGameBoard);
-    Object.assign(gameController, newGameController);
-    
-    hideWinModal();
-}
-
 // DOM Event Listeners for Web Interface
 document.addEventListener('DOMContentLoaded', () => {
     // Get all grid cells
@@ -193,82 +158,27 @@ document.addEventListener('DOMContentLoaded', () => {
     gridCells.forEach((cell, index) => {
         cell.addEventListener('click', (e) => {
             console.log(`Cell ${index} clicked`);
-            const col = index % 3, row = Math.floor(index / 3);
-            const result = gameController.playTurn(row, col);
-            if (result.success) {
-                cell.textContent = gameController.players[result.player].marker;
-                if (checkWin(gameBoard.getBoard(), result.player)) {
-                    const playerName = gameController.players[result.player].name;
-                    const marker = gameController.players[result.player].marker;
-                    
-                    // Show custom modal
-                    showWinModal(`🎉 ${playerName} (${marker}) wins! 🎉`);
-                    
-                    console.log(`Player ${result.player} wins!`);
-                }
-            }
+            // TODO: Add game logic here
         });
     });
-
+    
     // Add event listeners for menu buttons
     const resetBtn = document.getElementById('resetBtn');
     const timerBtn = document.getElementById('timerBtn');
-    const themeToggleBtn = document.getElementById('themeToggleBtn');
     const settingsBtn = document.getElementById('settingsBtn');
     
     resetBtn.addEventListener('click', () => {
         console.log('Reset button clicked');
-        resetGame();
+        // TODO: Reset game logic
     });
     
     timerBtn.addEventListener('click', () => {
         console.log('Timer button clicked');
         // TODO: Timer logic
     });
-
-    themeToggleBtn.addEventListener('click', () => {
-        const root = document.documentElement;
-        const isLightTheme = root.classList.contains('light-theme');
-        
-        if (isLightTheme) {
-            root.classList.remove('light-theme');
-            themeToggleBtn.textContent = '🌙 Dark';
-            localStorage.setItem('theme', 'dark');
-        } else {
-            root.classList.add('light-theme');
-            themeToggleBtn.textContent = '☀️ Light';
-            localStorage.setItem('theme', 'light');
-        }
-    });
-
-    // load the saved theme on page load
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-        document.documentElement.classList.add('light-theme');
-        themeToggleBtn.textContent = '☀️ Light';
-    }
     
     settingsBtn.addEventListener('click', () => {
         console.log('Settings button clicked');
-        // TODO: Settings 
-    });
-
-    // modal button evenlisteners
-    const playAgainBtn = document.getElementById('playAgainBtn');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    
-    playAgainBtn.addEventListener('click', () => {
-        resetGame();
-    });
-    
-    closeModalBtn.addEventListener('click', () => {
-        hideWinModal();
-    });
-
-    const modal = document.getElementById('winModal');
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            hideWinModal();
-        }
+        // TODO: Settings logic
     });
 });

@@ -1,0 +1,205 @@
+* {
+    font-family:'Courier New', Courier, monospace;
+}
+
+:root {
+    --bg-primary: #0d0d0d;
+    --bg-secondary: #1a1a1a;
+    --bg-tertiary: #330000;
+    --accent-color: #cc0000;
+    --accent-hover: #ff0000;
+    --text-primary: white;
+    --text-secondary: white;
+    --border-color: #cc0000;
+    --modal-overlay: rgba(0, 0, 0, 0.5);
+    --modal-shadow: rgba(204, 0, 0, 0.5);
+}
+
+:root.light-theme {
+    --bg-primary: #f8f9fa;
+    --bg-secondary: white;
+    --bg-tertiary: #e9ecef;
+    --accent-color: #0066cc;
+    --accent-hover: #0052a3;
+    --text-primary: #333;
+    --text-secondary: #666;
+    --border-color: #dee2e6;
+    --modal-overlay: rgba(0, 0, 0, 0.3);
+    --modal-shadow: rgba(0, 102, 204, 0.3);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-primary);
+}
+
+.titlemenubar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px;
+    background: linear-gradient(to right, var(--bg-secondary), var(--accent-color));
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.titlemenubar .titletext {
+    font-size: 24px;
+    font-weight: bold;
+    padding: 0px 20px;
+    color: var(--text-primary);
+}
+
+.menu-options {
+    display: flex;
+    gap: 15px;
+}
+
+.menu-button {
+    padding: 8px 16px;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.menu-button:hover {
+    background: linear-gradient(to right, var(--bg-secondary), var(--accent-color));
+    border-color: var(--accent-hover);
+}
+
+.timer-display {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    max-width: 600px;
+    margin: 80px auto 0 auto;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.grid-cell {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+    border-right: 2px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 72px;
+    font-weight: bold;
+    transition: background 0.2s;
+    color: var(--text-primary);
+}
+
+/* no right border from rightmost cells */
+.grid-cell:nth-child(3n) {
+    border-right: none;
+}
+
+/* no bot border from bottom row cells */
+.grid-cell:nth-child(7), .grid-cell:nth-child(8), .grid-cell:nth-child(9) {
+    border-bottom: none;
+}
+
+.grid-cell:hover {
+    background: linear-gradient(135deg, var(--accent-color), var(--bg-secondary));
+}
+
+.grid-cell:active {
+    background-color: var(--accent-color);
+}
+
+/* modal stuff for win + settings, etc. */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--modal-overlay);
+    animation: fadeIn 0.3s;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, var(--bg-secondary), var(--accent-color));
+    margin: 15% auto;
+    padding: 30px;
+    border: 2px solid var(--accent-hover);
+    border-radius: 15px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 10px 30px var(--modal-shadow);
+    animation: slideIn 0.3s;
+}
+
+.modal-content h2 {
+    font-size: 28px;
+    margin: 0 0 20px 0;
+    color: var(--text-primary);
+    text-shadow: 2px 2px 4px var(--modal-shadow);
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.modal-button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.modal-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-button:not(.secondary) {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--accent-color);
+}
+
+.modal-button.secondary {
+    background-color: var(--accent-color);
+    color: var(--text-primary);
+    border: 2px solid var(--bg-secondary);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { 
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
